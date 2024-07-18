@@ -17,7 +17,7 @@ from genparse.cfglm import BoolCFGLM
 from genparse.proposal import CharacterProposal, TokenProposal
 from genparse.lm import TokenizedLLM
 from genparse.backends.vllm import vllmpplLLM, VLLMSampler
-from genparse.util import LarkStuff
+from genparse.util import lark_guide
 from genparse import EOS
 
 parser = argparse.ArgumentParser()
@@ -52,10 +52,10 @@ def load_proposal(proposal_name, llm, guide, args):
 @lru_cache(maxsize=10)
 def make_guide(grammar_string):
     try:
-        lark = LarkStuff(grammar_string)
+        guide = lark_guide(grammar_string)
     except Exception as e:
-        raise ValueError(f"Lark error : {e}")
-    return BoolCFGLM(lark.char_cfg())
+        raise ValueError(f"Guide init error : {e}")
+    return guide
     
 def post_process_posterior(posterior):
     return {re.sub('</s>', '', re.sub(EOS, '', x)) : p for x,p in posterior.items()}
