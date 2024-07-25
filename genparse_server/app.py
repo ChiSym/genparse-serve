@@ -2,6 +2,7 @@
 This is a Flask application which provides a web service for running inference using GenParse. 
 """
 
+import os
 import time
 import logging
 import traceback
@@ -9,10 +10,13 @@ import argparse
 import threading
 from flask import Flask, request, jsonify, abort
 
-from util import load_llm, post_process_posterior, load_proposal, make_guide
-from config import model_name, defaults, type_expectations
+from util import load_llm, post_process_posterior
+from config import model_name, defaults, type_expectations, proposal_cache_size
+from cache import ProposalCache
 
-from genparse.experimental.batch_inference import BatchStepper, BatchVLLM, smc 
+from genparse.experimental.batch_inference import BatchStepModel, BatchVLLM, smc 
+
+os.environ['TOKENIZERS_PARALLELISM'] = '(true | false)'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--debug', action='store_true', help='Enable debug mode')
@@ -36,26 +40,7 @@ logging.info(f"Loaded {model_name}")
 app = Flask(__name__)
 task_lock = threading.Lock() 
 
-def modify_request(request):
-    global PREV_REQUEST
-    PREV_REQUEST = request
-
-def modify_step_model(step_model):
-    global STEP_MODEL
-    STEP_MODEL = step_model
-
-def maintain_current_model(request, prev_request):
-    if prev_request is None:
-        return False
-    else:
-        return (
-            request['lark_grammar'] == prev_request['lark_grammar'] and 
-            request['proposal_name'] == prev_request['proposal_name'] and
-            request['proposal_args'] == prev_request['proposal_args']
-        )
-    
-modify_request(None)
-modify_step_model(None)
+proposal_cache = ProposalCache(maxsize=proposal_cache_size)
 
 def process_inference_task(request):
     start_time = time.time()
@@ -68,40 +53,18 @@ def process_inference_task(request):
             )
         request[param_name] = d
 
-    if maintain_current_model(request, PREV_REQUEST):
-        logging.info('Maintaining current step model')
-        step_model = STEP_MODEL
-        step_model.max_tokens = request['max_tokens']
-    else:
-        logging.info('Initializing new step model')
+    if request['n_particles'] > 350:
+        ValueError('n_particles must be less than 350')
 
-        if STEP_MODEL is not None:
-            start_time = time.time()
-            STEP_MODEL.cleanup()
-            logging.info(f'Cleaned up previous step model {time.time() - start_time:.2f}')
-
-        start_time = time.time()
-        guide = make_guide(request['lark_grammar'])
-        logging.info(f'Loaded guide for custom grammar {time.time() - start_time:.2f}')
-
-        start_time = time.time()
-        parallel_proposal = load_proposal(
-            request['proposal_name'], llm, guide, request['proposal_args']
-        )
-        logging.info(f'Loaded proposal {time.time() - start_time:.2f}')
-
-        start_time = time.time()
-        step_model = BatchStepper(parallel_proposal, BatchVLLM(llm), max_tokens = request['max_tokens'])
-        logging.info(f'Loaded step model {time.time() - start_time:.2f}')
-
-        modify_step_model(step_model)
-
-    modify_request(request)
+    parallel_proposal = proposal_cache.fetch_or_create_proposal(request, llm)
+    step_model = BatchStepModel(parallel_proposal, BatchVLLM(llm), max_tokens = request['max_tokens'])
 
     start_time = time.time()
+
     step_model.batch_llm.set_prompt(request['prompt'])
     results = smc(step_model, n_particles=request['n_particles'])
-    logging.info(f'Inference complete {time.time() - start_time:.2f}')
+
+    logging.info(f'Inference complete in {time.time() - start_time:.2f} secs')
 
     return {
         'posterior' : post_process_posterior(results.posterior),

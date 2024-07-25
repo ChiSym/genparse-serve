@@ -1,6 +1,9 @@
-model_name = 'meta-llama/Meta-Llama-3-8B'
+model_name = 'meta-llama/Meta-Llama-3.1-8B'
+#"hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4"
 
-n_processes = 10
+n_processes = 8
+
+proposal_cache_size = 10
 
 type_expectations = {
     'prompt': str,
@@ -16,7 +19,7 @@ type_expectations = {
 defaults = {
     'prompt': None,
     'method': 'smc-standard',
-    'n_particles': 25,
+    'n_particles': 30,
     'lark_grammar': None,
     'proposal_name': 'character',
     'proposal_args': {},

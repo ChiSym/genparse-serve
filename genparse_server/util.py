@@ -33,6 +33,6 @@ def post_process_posterior(posterior):
 def load_llm(model_name):
     from genparse.lm import VirtualTokenizedLLM
 
-    llm = VirtualTokenizedLLM.from_name(model_name, seed = 0)
+    llm = VirtualTokenizedLLM.from_name(model_name)
 
     return llm
