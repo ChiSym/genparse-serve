@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Check if the user has provided the WorkingDirectory path, and conda environment
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <working_directory> <conda_environment>"
+if [ -z "$1" ]; then
+  echo "Usage: $0 <conda_environment>"
   exit 1
 fi
 
 # Assign the provided arguments to variables
-WORKING_DIRECTORY=$1
+WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/genparse_server"
 USER=$USER
-CONDA_ENVIRONMENT=$2
+CONDA_ENVIRONMENT=$1
 
 # Define the log directory path
 LOG_DIRECTORY=$WORKING_DIRECTORY/log
@@ -34,8 +34,7 @@ User=$USER
 WorkingDirectory=$WORKING_DIRECTORY
 Environment="PATH=$CONDA_ENVIRONMENT/bin"
 ExecStart=$CONDA_ENVIRONMENT/bin/python $WORKING_DIRECTORY/app.py
-Restart=always
-RestartSec=3
+Restart=on-failure
 StandardOutput=append:$LOG_DIRECTORY/genparse-service.log
 StandardError=append:$LOG_DIRECTORY/genparse-service-error.log
 
@@ -52,4 +51,4 @@ sudo systemctl enable genparse-server-app.service
 # Start the service
 sudo systemctl start genparse-server-app.service
 
-echo "Service created and started successfully."
+echo "GenParse service created and started successfully."

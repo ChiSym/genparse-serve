@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# Check if the user has provided the WorkingDirectory path, user, and conda environment
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <working_directory> <user> <conda_environment>"
+# Check if the user has provided the WorkingDirectory path and conda environment
+if [ -z "$1" ]; then
+  echo "Usage: $0 <conda_environment>"
   exit 1
 fi
 
 # Assign the provided arguments to variables
-WORKING_DIRECTORY=$1
-USER=$2
-CONDA_ENVIRONMENT=$3
+WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/restart_service_app"
+USER=$USER
+CONDA_ENVIRONMENT=$1
 
 # Define the log directory path
-LOG_DIRECTORY=$WORKING_DIRECTORY/restart_service_app/log
+LOG_DIRECTORY=$WORKING_DIRECTORY/log
 
 # Create the log directory if it doesn't exist
 if [ ! -d "$LOG_DIRECTORY" ]; then
@@ -31,13 +31,12 @@ After=network.target
 
 [Service]
 User=$USER
-WorkingDirectory=$WORKING_DIRECTORY/restart_service_app/
+WorkingDirectory=$WORKING_DIRECTORY
 Environment="PATH=$CONDA_ENVIRONMENT/bin"
 Environment="USERNAME=genparser"
 Environment="PASSWORD=earley"
-ExecStart=$CONDA_ENVIRONMENT/bin/python $WORKING_DIRECTORY/restart_service_app/app.py
-Restart=always
-RestartSec=3
+ExecStart=$CONDA_ENVIRONMENT/bin/python $WORKING_DIRECTORY/app.py
+Restart=on-failure
 StandardOutput=append:$LOG_DIRECTORY/genparse-restart-service.log
 StandardError=append:$LOG_DIRECTORY/genparse-restart-service.log
 
@@ -54,4 +53,4 @@ sudo systemctl enable restart-service-app.service
 # Start the service
 sudo systemctl start restart-service-app.service
 
-echo "Service created and started successfully."
+echo "Restart service created and started successfully."
