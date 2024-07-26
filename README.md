@@ -22,43 +22,16 @@ This is a repository for a simple Flask application which serves GenParse reques
 * Clone this repository.
 * Create directory for log files with `mkdir log`.
 * Install flask and waitress with `pip install flask waitress`
-* Create a service file at `/etc/systemd/system/genparse-server-app.service`. This file should be of the form:
-  ```bash
-  [Unit]
-  Description=GenParse Flask Application
-  After=network.target
-    
-  [Service]
-  User=lebrunb
-  Group=lebrunb
-  WorkingDirectory=/home/lebrunb/genparse-serve
-  Environment="PATH=/home/lebrunb/miniconda3/genparse/bin"
-  ExecStart=/home/lebrunb/miniconda3/envs/genparse/bin/python /home/lebrunb/genparse-serve/app.py
-  Restart=always
-  RestartSec=3
-  StandardOutput=append:/home/lebrunb/genparse-serve/log/genparse-service-error.log
-  StandardError=append:/home/lebrunb/genparse-serve/log/genparse-service-error.log
-    
-  [Install]
-  WantedBy=multi-user.target
-  ```
-* Enable the service with `sudo systemctl enable /etc/systemd/system/genparse-server-app.service`.
-* Start the service with `sudo systemctl start genparse-server-app.service`.
-* Check the status of the server with `sudo systemctl status genparse-server-app.service`. You should expect to see a status of the form:
+* Create a service file and start the server with 
+```bash
+sh init_genparse_service.sh path-to-genparse-server-sub-dir user path-to-genparse-conda-env
+# example
+sh init_genparse_service.sh /home/lebrunb/genparse-serve/genparse-server lebrunb /home/lebrunb/miniconda3/envs/genparse
+```
 
-	```bash
-	● genparse-server-app.service - GenParse Flask Application
-	     Loaded: loaded (/etc/systemd/system/genparse-server-app.service; enabled; preset: enabled)
-	     Active: active (running) since Thu 2024-07-18 20:51:33 UTC; 4 days ago
-	   Main PID: 7709 (pt_main_thread)
-	      Tasks: 45 (limit: 102548)
-	     Memory: 5.7G
-	        CPU: 36min 27.716s
-	     CGroup: /system.slice/genparse-server-app.service
-	             └─7709 /home/lebrunb/miniconda3/envs/genparse/bin/python /home/lebrunb/genparse-serve/app.py
-	
-	Jul 18 20:51:33 genparse-server-3 systemd[1]: Started genparse-server-app.service - GenParse Flask Application.
-	```
+* Check the status of the server with `sudo systemctl status genparse-server-app.service`.
+* You can restart the server with `sudo systemctl restart genparse-server-app.service`.
+
 
 ## Example usage
 
