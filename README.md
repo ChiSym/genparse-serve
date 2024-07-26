@@ -20,13 +20,12 @@ This is a repository for a simple Flask application which serves GenParse reques
 	```
  	We recommend setting up a genparse in a conda environment with python 3.10.
 * Clone this repository.
-* Create directory for log files with `mkdir log`.
 * Install flask and waitress with `pip install flask waitress`
 * Create a service file and start the server with 
 ```bash
-sh init_genparse_service.sh path-to-genparse-server-sub-dir user path-to-genparse-conda-env
-# example
-sh init_genparse_service.sh /home/lebrunb/genparse-serve/genparse-server lebrunb /home/lebrunb/miniconda3/envs/genparse
+sh init_genparse_service.sh path-to-genparse-server-sub-dir path-to-genparse-conda-env
+# for example:
+sh init_genparse_service.sh $PWD/genparse_server /home/lebrunb/miniconda3/envs/genparse
 ```
 
 * Check the status of the server with `sudo systemctl status genparse-server-app.service`.
