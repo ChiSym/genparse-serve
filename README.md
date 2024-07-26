@@ -23,8 +23,10 @@ This is a repository for a Flask application which serves GenParse requests from
 * Create a service file and start the server with 
 	```bash
 	sh start.sh path-to-genparse-conda-env
-	# for example:
-	sh /home/lebrunb/miniconda3/envs/genparse
+ 	```
+ 	For example:
+	```bash
+	sh start.sh /home/lebrunb/miniconda3/envs/genparse
 	```
 
 * Check the status of the server with `sudo systemctl status genparse-server-app.service`.
