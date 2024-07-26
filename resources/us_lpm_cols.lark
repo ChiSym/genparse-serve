@@ -1,0 +1,377 @@
+start: " " var_list EOS | " I can't answer that\n"
+EOS: "\n"
+var_list: var | var ", " var | var ", " var ", " var | var ", " var ", " var ", " var | var ", " var ", " var ", " var ", " var
+var: NORMAL0
+	| NORMAL1
+	| NORMAL2
+	| NORMAL3
+	| NORMAL4
+	| NORMAL5
+	| NORMAL6
+	| NORMAL7
+	| NORMAL8
+	| NORMAL9
+	| NORMAL10
+	| NORMAL11
+	| NORMAL12
+	| NORMAL13
+	| NORMAL14
+	| NORMAL15
+	| NORMAL16
+	| NORMAL17
+	| NORMAL18
+	| NORMAL19
+	| NORMAL20
+	| NORMAL21
+	| NORMAL22
+	| NORMAL23
+	| NORMAL24
+	| NORMAL25
+	| NORMAL26
+	| NORMAL27
+	| NORMAL28
+	| NORMAL29
+	| NORMAL30
+	| NORMAL31
+	| NORMAL32
+	| NORMAL33
+	| NORMAL34
+	| NORMAL35
+	| NORMAL36
+	| NORMAL37
+	| NORMAL38
+	| NORMAL39
+	| NORMAL40
+	| NORMAL41
+	| NORMAL42
+	| NORMAL43
+	| NORMAL44
+	| NORMAL45
+	| NORMAL46
+	| NORMAL47
+	| NORMAL48
+	| NORMAL49
+	| NORMAL50
+	| NORMAL51
+	| NORMAL52
+	| NORMAL53
+	| NORMAL54
+	| NORMAL55
+	| NORMAL56
+	| NORMAL57
+	| NORMAL58
+	| NORMAL59
+	| NORMAL60
+	| NORMAL61
+	| NORMAL62
+	| NORMAL63
+	| NORMAL64
+	| NORMAL65
+	| NORMAL66
+	| NORMAL67
+	| NORMAL68
+	| NORMAL69
+	| NORMAL70
+	| NORMAL71
+	| NORMAL72
+	| NORMAL73
+	| NORMAL74
+	| NORMAL75
+	| NORMAL76
+	| NORMAL77
+	| NORMAL78
+	| NORMAL79
+	| NORMAL80
+	| NORMAL81
+	| NORMAL82
+	| NORMAL83
+	| NORMAL84
+	| NORMAL85
+	| NORMAL86
+	| NORMAL87
+	| NORMAL88
+	| NORMAL89
+	| NORMAL90
+	| NORMAL91
+	| NORMAL92
+	| NORMAL93
+	| NORMAL94
+	| NORMAL95
+	| NORMAL96
+	| NORMAL97
+	| NORMAL98
+	| NORMAL99
+	| NORMAL100
+	| NORMAL101
+	| NORMAL102
+	| NORMAL103
+	| NORMAL104
+	| NORMAL105
+	| NORMAL106
+	| NORMAL107
+	| NORMAL108
+	| NORMAL109
+	| NORMAL110
+	| NORMAL111
+	| NORMAL112
+	| NORMAL113
+	| NORMAL114
+	| NORMAL115
+	| NORMAL116
+	| CATEGORICAL0
+	| CATEGORICAL1
+	| CATEGORICAL2
+	| CATEGORICAL3
+	| CATEGORICAL4
+	| CATEGORICAL5
+	| CATEGORICAL6
+	| CATEGORICAL7
+	| CATEGORICAL8
+	| CATEGORICAL9
+	| CATEGORICAL10
+	| CATEGORICAL11
+	| CATEGORICAL12
+	| CATEGORICAL13
+	| CATEGORICAL14
+	| CATEGORICAL15
+	| CATEGORICAL16
+	| CATEGORICAL17
+	| CATEGORICAL18
+	| CATEGORICAL19
+	| CATEGORICAL20
+	| CATEGORICAL21
+	| CATEGORICAL22
+	| CATEGORICAL23
+	| CATEGORICAL24
+	| CATEGORICAL25
+	| CATEGORICAL26
+	| CATEGORICAL27
+	| CATEGORICAL28
+	| CATEGORICAL29
+	| CATEGORICAL30
+	| CATEGORICAL31
+	| CATEGORICAL32
+	| CATEGORICAL33
+	| CATEGORICAL34
+	| CATEGORICAL35
+	| CATEGORICAL36
+	| CATEGORICAL37
+	| CATEGORICAL38
+	| CATEGORICAL39
+	| CATEGORICAL40
+	| CATEGORICAL41
+	| CATEGORICAL42
+	| CATEGORICAL43
+	| CATEGORICAL44
+	| CATEGORICAL45
+	| CATEGORICAL46
+	| CATEGORICAL47
+	| CATEGORICAL48
+	| CATEGORICAL49
+	| CATEGORICAL50
+	| CATEGORICAL51
+	| CATEGORICAL52
+	| CATEGORICAL53
+	| CATEGORICAL54
+	| CATEGORICAL55
+	| CATEGORICAL56
+	| CATEGORICAL57
+	| CATEGORICAL58
+	| CATEGORICAL59
+	| CATEGORICAL60
+	| CATEGORICAL61
+	| CATEGORICAL62
+	| CATEGORICAL63
+	| CATEGORICAL64
+	| CATEGORICAL65
+	| CATEGORICAL66
+	| CATEGORICAL67
+	| CATEGORICAL68
+	| CATEGORICAL69
+NORMAL0: "Age"
+NORMAL1: "Asset_based_income_past_12_months"
+NORMAL2: "Commute_minutes"
+NORMAL3: "Total_earnings"
+NORMAL4: "Total_income"
+NORMAL5: "Income_other"
+NORMAL6: "Income_public_assistance"
+NORMAL7: "Income_retirement"
+NORMAL8: "Income_self_employment"
+NORMAL9: "Income_supplementary_security"
+NORMAL10: "Income_social_security"
+NORMAL11: "Income_salary_wages"
+NORMAL12: "Hours_worked_per_week"
+NORMAL13: "Weeks_worked_past_12_months"
+NORMAL14: "Family_income"
+NORMAL15: "Salary"
+NORMAL16: "Bicycles"
+NORMAL17: "Medicare_payments"
+NORMAL18: "Computer_information_services_(internet)"
+NORMAL19: "Plays_theater_operas_and_concerts"
+NORMAL20: "Dating_services"
+NORMAL21: "Admission_to_sporting_events"
+NORMAL22: "New_motorcycles"
+NORMAL23: "Alcoholic_beverages"
+NORMAL24: "Indoor_plants_and_fresh_flowers"
+NORMAL25: "Satellite_radio_services"
+NORMAL26: "Used_cars"
+NORMAL27: "Sports_recreation_and_exercise_equipment"
+NORMAL28: "Housing"
+NORMAL29: "Video_game_software"
+NORMAL30: "Living_room_tables"
+NORMAL31: "Satellite_dishes"
+NORMAL32: "Luggage"
+NORMAL33: "Credit_card_memberships"
+NORMAL34: "Telephone_services"
+NORMAL35: "Hunting_and_fishing_equipment"
+NORMAL36: "Cooking_stoves_and_ovens_(owned_home)"
+NORMAL37: "Wall_units_cabinets_and_other_furniture"
+NORMAL38: "Used_trucks"
+NORMAL39: "Natural_gas"
+NORMAL40: "Babysitting_and_childcare"
+NORMAL41: "Kitchen_and_dining_room_furniture"
+NORMAL42: "Books_digital_books_or_book_subscriptions"
+NORMAL43: "Bike_and_e-scooter_sharing_or_rental"
+NORMAL44: "Winter_sports_equipment"
+NORMAL45: "Computers_and_computer_hardware_for_nonbusiness_use"
+NORMAL46: "Tickets_to_movies"
+NORMAL47: "Closet_and_storage_items"
+NORMAL48: "Fuel_oil_and_other_fuels"
+NORMAL49: "Apparel_and_services"
+NORMAL50: "Electricity"
+NORMAL51: "Parking_fees"
+NORMAL52: "Cash_contributions_to_charities_and_other_organizations"
+NORMAL53: "Medicaid_premiums"
+NORMAL54: "Athletic_gear_game_tables_and_exercise_equipment"
+NORMAL55: "Power_tools"
+NORMAL56: "College_tuition"
+NORMAL57: "Public_and_other_transportation"
+NORMAL58: "Entertainment"
+NORMAL59: "Sofas"
+NORMAL60: "Medical_services"
+NORMAL61: "Infants'_equipment"
+NORMAL62: "Computer_software"
+NORMAL63: "Water_sports_equipment"
+NORMAL64: "Life_and_other_personal_insurance"
+NORMAL65: "Televisions"
+NORMAL66: "Mortgage_interest_and_charges"
+NORMAL67: "Apparel_women_16_and_over"
+NORMAL68: "Applications_games_and_ringtones_for_handheld_devices"
+NORMAL69: "Computer_accessories"
+NORMAL70: "Alimony_expenditures"
+NORMAL71: "Outdoor_equipment"
+NORMAL72: "Hand_tools"
+NORMAL73: "Watches"
+NORMAL74: "Used_motorcycles"
+NORMAL75: "Major_appliances"
+NORMAL76: "Apparel_men_16_and_over"
+NORMAL77: "Tickets_to_parks_or_museums"
+NORMAL78: "Cash_contribution_to_political_organizations"
+NORMAL79: "Education"
+NORMAL80: "Lawn_and_garden_equipment"
+NORMAL81: "Healthcare"
+NORMAL82: "New_trucks"
+NORMAL83: "Care_for_elderly_invalids_handicapped_etc."
+NORMAL84: "Furniture"
+NORMAL85: "Child_support_expenditures"
+NORMAL86: "Refrigerators_and_freezers_(owned_home)"
+NORMAL87: "Personal_care_products_and_services"
+NORMAL88: "Portable_memory"
+NORMAL89: "Medicare_prescription_drug_premiums"
+NORMAL90: "Telephones_and_accessories"
+NORMAL91: "Electric_vehicle_charging"
+NORMAL92: "Camping_equipment"
+NORMAL93: "Cable_and_satellite_television_services"
+NORMAL94: "Lamps_lighting_fixtures_and_ceiling_fans"
+NORMAL95: "Jewelry"
+NORMAL96: "Vehicle_purchases"
+NORMAL97: "Rent"
+NORMAL98: "Video_game_hardware_and_accessories"
+NORMAL99: "Water_and_other_public_services"
+NORMAL100: "Clothes_washers_or_dryers_(owned_home)"
+NORMAL101: "Cigarettes"
+NORMAL102: "Cash_contribution_to_educational_institutions"
+NORMAL103: "Online_gaming_services"
+NORMAL104: "New_cars"
+NORMAL105: "Diesel_fuel"
+NORMAL106: "Food"
+NORMAL107: "Mattresses_and_springs"
+NORMAL108: "Office_furniture_for_home_use"
+NORMAL109: "Gasoline"
+NORMAL110: "Shopping_club_membership_fees"
+NORMAL111: "Pets"
+NORMAL112: "Clocks_and_other_household_decorative_items"
+NORMAL113: "Rental_and_repair_of_miscellaneous_sports_equipment"
+NORMAL114: "Streaming_and_downloading_audio"
+NORMAL115: "Microwave_ovens_(owned_home)"
+NORMAL116: "Gasoline_other_fuels_and_motor_oil"
+CATEGORICAL0: "Region"
+CATEGORICAL1: "State"
+CATEGORICAL2: "PUMA10"
+CATEGORICAL3: "PUMA20"
+CATEGORICAL4: "Sex"
+CATEGORICAL5: "Race"
+CATEGORICAL6: "World_region_of_birth"
+CATEGORICAL7: "Citizen_status"
+CATEGORICAL8: "Class_of_worker"
+CATEGORICAL9: "Difficulty_self_care"
+CATEGORICAL10: "Difficulty_hearing"
+CATEGORICAL11: "Difficulty_vision"
+CATEGORICAL12: "Difficulty_indep_living"
+CATEGORICAL13: "Difficulty_ambulatory"
+CATEGORICAL14: "VAT_dissability_rating"
+CATEGORICAL15: "VAT_dissability"
+CATEGORICAL16: "Difficulty_cognitive"
+CATEGORICAL17: "English_fluency"
+CATEGORICAL18: "Gave_bith_last_12_months"
+CATEGORICAL19: "Grandparents_living_with_grandchildren"
+CATEGORICAL20: "Time_responsible_for_grandchildren"
+CATEGORICAL21: "Grandparents_responsible_for_grandchildren"
+CATEGORICAL22: "Health_insurance_coverage"
+CATEGORICAL23: "Insurance_health_private"
+CATEGORICAL24: "Insurance_health_public"
+CATEGORICAL25: "Insurance_via_employer"
+CATEGORICAL26: "Insurance_purchased_directly"
+CATEGORICAL27: "Insurance_Medicare"
+CATEGORICAL28: "Insurance_gov_assisted_medicaid"
+CATEGORICAL29: "Insurance_via_military"
+CATEGORICAL30: "Insurance_via_VA"
+CATEGORICAL31: "Insurance_via_IHS"
+CATEGORICAL32: "Means_of_transportation"
+CATEGORICAL33: "Language_other_than_English_spoken_at_home"
+CATEGORICAL34: "Marital_status"
+CATEGORICAL35: "Divorced_in_past_12_months"
+CATEGORICAL36: "Married_in_past_12_months"
+CATEGORICAL37: "Times_married"
+CATEGORICAL38: "Widowed_in_past_12_months"
+CATEGORICAL39: "Mobility_status"
+CATEGORICAL40: "Military_service"
+CATEGORICAL41: "Military_served_after_Sept_2001"
+CATEGORICAL42: "Military_served_1990_to_Aug_2001"
+CATEGORICAL43: "Military_served_1975_to_1990"
+CATEGORICAL44: "Military_served_Vietnam_era"
+CATEGORICAL45: "Military_served_1955_to_1965"
+CATEGORICAL46: "Military_served_Korean_war_era"
+CATEGORICAL47: "Military_served_peacetime_before_1950"
+CATEGORICAL48: "Military_served_WW2"
+CATEGORICAL49: "Work_temporary_absence"
+CATEGORICAL50: "Work_available"
+CATEGORICAL51: "Work_layed_off"
+CATEGORICAL52: "Work_looking"
+CATEGORICAL53: "School_enrollment"
+CATEGORICAL54: "Educational_attainment"
+CATEGORICAL55: "Field_of_degree"
+CATEGORICAL56: "Field_of_second_degree"
+CATEGORICAL57: "When_last_worked"
+CATEGORICAL58: "Worked_last_week"
+CATEGORICAL59: "Ancestry_one_or_more"
+CATEGORICAL60: "Ancestry"
+CATEGORICAL61: "Ancestry_second"
+CATEGORICAL62: "Disability"
+CATEGORICAL63: "Employment_status"
+CATEGORICAL64: "Work_industry_sector"
+CATEGORICAL65: "Language_spoken_at_home"
+CATEGORICAL66: "Year"
+CATEGORICAL67: "Data_source"
+CATEGORICAL68: "Occupation"
+CATEGORICAL69: "Environment"
