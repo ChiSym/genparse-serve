@@ -12,7 +12,7 @@ def load_grammar(grammar_path):
         grammar_str = f.read()
     return grammar_str
 
-grammar_paths = ["resources/us_lpm_prob.lark", "resources/us_lpm_cols.lark"]
+grammar_paths = ["resources/us_lpm_cols.lark"] #"resources/us_lpm_prob.lark",
 grammars = list(map(load_grammar, grammar_paths))
 endpoint = args.endpoint
 
@@ -30,7 +30,7 @@ for grammar in grammars:
     headers = {
         "Content-type": "application/json",
         "Accept": "application/json"
-        }
+    }
     x = requests.post(endpoint, json = request, headers=headers)
     response = x.json()
     posterior = response['posterior']

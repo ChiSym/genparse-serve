@@ -42,9 +42,7 @@ task_lock = threading.Lock()
 
 proposal_cache = ProposalCache(maxsize=proposal_cache_size)
 
-def process_inference_task(request):
-    start_time = time.time()
-
+def validate_request(request):
     for param_name, expected_type in type_expectations.items():
         d = request.get(param_name, defaults[param_name])
         if not isinstance(d, expected_type):
@@ -56,13 +54,23 @@ def process_inference_task(request):
     if request['n_particles'] > 350:
         ValueError('n_particles must be less than 350')
 
+    return request
+
+def process_inference_task(request):
+    request = validate_request(request)
+
+    n_particles = request['n_particles']
+    max_tokens = request['max_tokens']
+
     parallel_proposal = proposal_cache.fetch_or_create_proposal(request, llm)
-    step_model = BatchStepModel(parallel_proposal, BatchVLLM(llm), max_tokens = request['max_tokens'])
+    step_model = BatchStepModel(parallel_proposal, BatchVLLM(llm), max_tokens = max_tokens)
+
+    logging.info(f'Running inference with {n_particles=} and {max_tokens=}')
 
     start_time = time.time()
 
     step_model.batch_llm.set_prompt(request['prompt'])
-    results = smc(step_model, n_particles=request['n_particles'])
+    results = smc(step_model, n_particles=n_particles)
 
     logging.info(f'Inference complete in {time.time() - start_time:.2f} secs')
 
@@ -70,6 +78,7 @@ def process_inference_task(request):
         'posterior' : post_process_posterior(results.posterior),
         'log_ml_estimate' : results.log_ml
     }
+  
 
 @app.route('/infer', methods=['POST'])
 def run_inference():
