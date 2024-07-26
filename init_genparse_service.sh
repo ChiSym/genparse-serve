@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Check if the user has provided the WorkingDirectory path, user, and conda environment
+# Check if the user has provided the WorkingDirectory path, and conda environment
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <working_directory> <user> <conda_environment>"
+  echo "Usage: $0 <working_directory> <conda_environment>"
   exit 1
 fi
 
 # Assign the provided arguments to variables
 WORKING_DIRECTORY=$1
-USER=$2
-CONDA_ENVIRONMENT=$3
+USER=$USER
+CONDA_ENVIRONMENT=$2
 
 # Define the log directory path
 LOG_DIRECTORY=$WORKING_DIRECTORY/log
@@ -21,12 +21,12 @@ if [ ! -d "$LOG_DIRECTORY" ]; then
 fi
 
 # Define the service file path
-SERVICE_FILE_PATH="/etc/systemd/system/genparse-flask-app.service"
+SERVICE_FILE_PATH="/etc/systemd/system/genparse-server-app.service"
 
 # Create the service file with the desired content
 sudo tee $SERVICE_FILE_PATH > /dev/null <<EOL
 [Unit]
-Description=GenParse Flask Application
+Description=GenParse Server
 After=network.target
 
 [Service]
@@ -47,9 +47,9 @@ EOL
 sudo systemctl daemon-reload
 
 # Enable the service to start on boot
-sudo systemctl enable genparse-flask-app.service
+sudo systemctl enable genparse-server-app.service
 
 # Start the service
-sudo systemctl start genparse-flask-app.service
+sudo systemctl start genparse-server-app.service
 
 echo "Service created and started successfully."
