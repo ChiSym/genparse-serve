@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GenParse Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #requests {
+            list-style-type: none;
+            padding: 0;
+        }
+        .request {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .status-step {
+            margin-bottom: 5px;
+        }
+        .section-toggle {
+            margin-right: 10px;
+        }
+        .error {
+            color: red;
+        }
+        .json-field {
+            margin-left: 20px;
+        }
+        .json-toggle {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .json-content {
+            display: none;
+            margin-left: 20px;
+            white-space: pre-wrap; /* Preserve whitespace */
+        }
+        .json-toggle::before {
+            content: '▶'; /* Triangle */
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .json-content.visible {
+            display: block;
+        }
+        .json-toggle.open::before {
+            content: '▼'; /* Open triangle */
+        }
+    </style>
+</head>
+<body>
+    <h1>GenParse Dashboard</h1>
+    <ul id="requests"></ul>
+
+    <script>
+        const socket = io();
+        const requestDataMap = {}; // Map to store request data attributes
+
+        // Function to create or update a request element
+        function createOrUpdateRequestElement(requestId) {
+            let requestElement = document.getElementById(requestId);
+
+            if (!requestElement) {
+                requestElement = document.createElement('li');
+                requestElement.id = requestId;
+                requestElement.className = 'request';
+
+                const statusContainer = document.createElement('div');
+                statusContainer.className = 'status';
+                requestElement.appendChild(statusContainer);
+
+                // Create buttons for showing request and response data
+                const attributesButton = document.createElement('button');
+                attributesButton.className = 'section-toggle';
+                attributesButton.innerText = 'Show Request Data';
+                attributesButton.onclick = () => toggleSection(requestId, 'attributes', attributesButton);
+                requestElement.appendChild(attributesButton);
+
+                const resultsButton = document.createElement('button');
+                resultsButton.className = 'section-toggle';
+                resultsButton.innerText = 'Show Response Data';
+                resultsButton.onclick = () => toggleSection(requestId, 'results', resultsButton);
+                requestElement.appendChild(resultsButton);
+
+                // Create section containers for attributes, results, and errors
+                const attributesContainer = document.createElement('div');
+                attributesContainer.className = 'attributes';
+                attributesContainer.style.display = 'none'; // Initially hidden
+                requestElement.appendChild(attributesContainer);
+
+                const resultsContainer = document.createElement('div');
+                resultsContainer.className = 'results';
+                resultsContainer.style.display = 'none'; // Initially hidden
+                requestElement.appendChild(resultsContainer);
+
+                const errorContainer = document.createElement('div');
+                errorContainer.className = 'error';
+                requestElement.appendChild(errorContainer);
+
+                document.getElementById('requests').prepend(requestElement);
+            }
+
+            return requestElement;
+        }
+
+        // Function to update or create section content
+        function updateSectionContent(requestElement, sectionClass, content) {
+            let sectionContainer = requestElement.querySelector(`.${sectionClass}`);
+            if (!sectionContainer) {
+                console.error('Section container not found:', sectionClass);
+                return;
+            }
+            sectionContainer.innerHTML = content;
+        }
+
+        // Function to toggle visibility of a section
+        function toggleSection(requestId, sectionClass, button) {
+            const requestElement = document.getElementById(requestId);
+            if (!requestElement) {
+                console.error('Request element not found:', requestId);
+                return;
+            }
+
+            const sectionContainer = requestElement.querySelector(`.${sectionClass}`);
+            if (!sectionContainer) {
+                console.error('Section container for', sectionClass, 'not found');
+                return;
+            }
+
+            const isVisible = sectionContainer.style.display === 'block';
+            sectionContainer.style.display = isVisible ? 'none' : 'block';
+            button.innerText = isVisible ? `Show ${capitalize(sectionClass)} Data` : `Hide ${capitalize(sectionClass)} Data`;
+        }
+
+        // Capitalize first letter of the string
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Function to create toggleable JSON content
+        function createToggleableJSON(json, className) {
+            let html = '';
+            for (const [key, value] of Object.entries(json)) {
+                const fieldId = `${className}-${key.replace(/\s+/g, '-')}`;
+
+                html += `
+                    <div class="json-field">
+                        <span class="json-toggle" onclick="toggleJSONContent('${fieldId}')"></span>
+                        <strong>${key}:</strong>
+                        <div id="${fieldId}" class="json-content">
+                            ${typeof value === 'object' ? createToggleableJSON(value, fieldId) : value}
+                        </div>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        // Function to toggle JSON field content
+        function toggleJSONContent(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (!field) {
+                console.error('JSON field not found:', fieldId);
+                return;
+            }
+
+            const isVisible = field.style.display === 'block';
+            field.style.display = isVisible ? 'none' : 'block';
+            const toggleButton = field.previousElementSibling;
+            toggleButton.classList.toggle('open', !isVisible);
+        }
+
+        // Function to update request details
+        function updateRequestDetails(requestElement, data) {
+            let attributesContent = '';
+            let resultsContent = '';
+
+            // Update attributes only if provided and not already set
+            if (data.attributes) {
+                requestDataMap[data.request_id] = data.attributes; // Store attributes
+                attributesContent = `<strong>Attributes:</strong><br>${createToggleableJSON(data.attributes, 'attributes')}`;
+            } else if (requestDataMap[data.request_id]) {
+                // If no new attributes, use previously stored attributes
+                attributesContent = `<strong>Attributes:</strong><br>${createToggleableJSON(requestDataMap[data.request_id], 'attributes')}`;
+            }
+            updateSectionContent(requestElement, 'attributes', attributesContent);
+
+            // Update error only if provided
+            if (data.error) {
+                errorContent = `<strong class="error">Error:</strong> ${data.error}<br>`;
+                updateSectionContent(requestElement, 'error', errorContent);
+            }
+
+            // Update results only if provided
+            if (data.result) {
+                resultsContent = `<strong>Result:</strong><br>${createToggleableJSON(data.result, 'results')}`;
+                updateSectionContent(requestElement, 'results', resultsContent);
+            }
+
+            // Ensure buttons are displayed as needed
+            const attributesButton = requestElement.querySelector('.section-toggle:nth-of-type(1)');
+            attributesButton.style.display = attributesContent ? 'inline' : 'none'; // Show button if content exists
+
+            const resultsButton = requestElement.querySelector('.section-toggle:nth-of-type(2)');
+            resultsButton.style.display = resultsContent ? 'inline' : 'none'; // Show button if content exists
+        }
+
+        // Function to append new status information
+        function appendStatus(requestElement, stepText, duration) {
+            const statusContainer = requestElement.querySelector('.status');
+            const statusStep = document.createElement('div');
+            statusStep.className = 'status-step';
+
+            // Only include duration in the display if it's provided
+            const durationText = duration ? ` (in ${duration.toFixed(2)} seconds)` : '';
+            statusStep.innerHTML = `${stepText}${durationText}`;
+            statusContainer.appendChild(statusStep);
+        }
+
+        // Handle status updates from the server
+        socket.on('status', (data) => {
+            console.log('Received status update:', data);  // Log incoming status updates
+            const requestElement = createOrUpdateRequestElement(data.request_id);
+            appendStatus(requestElement, `Step: ${data.step}`, data.duration);
+            updateRequestDetails(requestElement, data);
+        });
+
+        // Function to fetch history
+        function fetchHistory() {
+            fetch('/history')
+                .then(response => response.json())
+                .then(data => {
+                    data.reverse().forEach(item => {
+                        const requestElement = createOrUpdateRequestElement(item.request_id);
+                        updateRequestDetails(requestElement, item);
+                        item.steps.forEach(step => {
+                            appendStatus(requestElement, step.step, step.duration);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching history:', error));
+        }
+
+        // Initial fetch of history
+        fetchHistory();
+    </script>
+</body>
+</html>

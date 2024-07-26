@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 # Assign the provided arguments to variables
-WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/genparse_server"
+WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/src/genparse_server"
 USER=$USER
 CONDA_ENVIRONMENT=$1
 

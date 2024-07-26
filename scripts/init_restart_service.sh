@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 # Assign the provided arguments to variables
-WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/restart_service_app"
+WORKING_DIRECTORY="$(dirname "$(dirname "$(realpath "$0")")")/src/restart_service_app"
 USER=$USER
 CONDA_ENVIRONMENT=$1
 
