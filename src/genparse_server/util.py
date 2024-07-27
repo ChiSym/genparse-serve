@@ -36,3 +36,26 @@ def load_llm(model_name):
     llm = VirtualTokenizedLLM.from_name(model_name)
 
     return llm
+
+def emit_status_update(
+    socketio, historical_requests, request_id, step, 
+    duration=None, attributes=None, error=None, result=None
+):
+    update = {'request_id': request_id, 'step': step}
+    if attributes:
+        update['attributes'] = attributes
+        historical_requests[request_id]['attributes'] = attributes
+    if error:
+        update['error'] = error
+        historical_requests[request_id]['error'] = error
+    if result:
+        update['result'] = result
+        historical_requests[request_id]['result'] = result
+        historical_requests[request_id]['ongoing'] = False
+    if duration:
+        update['duration'] = duration       
+
+    historical_requests[request_id]['steps'].append(update)
+
+    socketio.emit('status', update)
+    socketio.sleep(0)

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT_Main Memory Usage</title>
+    <style>
+        #ptmainMemory {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #chart {
+            width: 100%;
+            height: 500px;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font-size: 12px;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+    <button id="checkPtmainMemory">Check PT_Main Memory Usage</button>
+    <div id="ptmainMemory">
+        <svg id="chart"></svg>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        document.getElementById('checkPtmainMemory').addEventListener('click', function() {
+            fetch('/ptmain-memory')
+                .then(response => response.json())
+                .then(data => {
+                    const svg = d3.select("#chart");
+                    const width = +svg.attr("width") || 800;
+                    const height = +svg.attr("height") || 500;
+
+                    // Clear previous chart
+                    svg.selectAll("*").remove();
+
+                    if (Array.isArray(data)) {
+                        const margin = {top: 20, right: 30, bottom: 40, left: 40};
+                        const chartWidth = width - margin.left - margin.right;
+                        const chartHeight = height - margin.top - margin.bottom;
+
+                        const x = d3.scaleBand()
+                            .domain(data.map(d => d.name))
+                            .range([0, chartWidth])
+                            .padding(0.1);
+
+                        const y = d3.scaleLinear()
+                            .domain([0, d3.max(data, d => d.memory_used)])
+                            .nice()
+                            .range([chartHeight, 0]);
+
+                        const g = svg.append("g")
+                            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+                        g.selectAll(".bar")
+                            .data(data)
+                            .enter().append("rect")
+                            .attr("class", "bar")
+                            .attr("x", d => x(d.name))
+                            .attr("y", d => y(d.memory_used))
+                            .attr("width", x.bandwidth())
+                            .attr("height", d => chartHeight - y(d.memory_used));
+
+                        g.append("g")
+                            .attr("class", "x-axis")
+                            .attr("transform", `translate(0,${chartHeight})`)
+                            .call(d3.axisBottom(x))
+                            .selectAll("text")
+                            .attr("class", "axis-label");
+
+                        g.append("g")
+                            .attr("class", "y-axis")
+                            .call(d3.axisLeft(y))
+                            .selectAll("text")
+                            .attr("class", "axis-label");
+
+                    } else {
+                        svg.append("text")
+                            .attr("x", width / 2)
+                            .attr("y", height / 2)
+                            .attr("text-anchor", "middle")
+                            .text(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching pt_main memory usage:', error);
+                });
+        });
+    </script>
+</body>
+</html>

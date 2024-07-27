@@ -1,4 +1,5 @@
-model_name = 'meta-llama/Meta-Llama-3.1-8B'
+model_name = 'gpt2'
+#'meta-llama/Meta-Llama-3.1-8B'
 #"hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4"
 
 n_processes = 8

@@ -1,6 +1,7 @@
 from collections import deque
-from util import load_proposal, make_guide
+from util import load_proposal, make_guide, emit_status_update
 import logging
+import time
 
 class ProposalCache:
     def __init__(self, maxsize=10):
@@ -23,16 +24,56 @@ class ProposalCache:
         else:
             raise ValueError('Invalid proposal arguments.')
     
-    def fetch_or_create_proposal(self, request, llm):
+    def fetch_or_create_proposal(
+        self, request, llm, socketio=None, historical_requests=None
+    ):
+        
         key = self.make_cache_key(request)
+
         if key in self.cache:
             logging.info('Reusing cached parallel proposal')
+            
+            if socketio is not None:
+                emit_status_update(
+                    socketio=socketio, 
+                    request_id=request['request_id'], 
+                    step='Fetching cached proposal',
+                    historical_requests=historical_requests
+                )
+            
             self.recent_keys.append(key)
+            
             return self.cache[key]
         else:
             logging.info('Creating new parallel proposal')
 
+            if socketio is not None:
+                emit_status_update(
+                    socketio=socketio, 
+                    request_id=request['request_id'], 
+                    historical_requests=historical_requests,
+                    step='Initializing grammar'
+                )
+
+            start_time = time.time()
             guide = make_guide(request['lark_grammar'])
+
+            if socketio is not None:
+                emit_status_update(
+                    socketio=socketio, 
+                    request_id=request['request_id'], 
+                    historical_requests=historical_requests,
+                    step='Initialized grammar',
+                    duration=time.time() - start_time
+                )
+
+                emit_status_update(
+                    socketio=socketio, 
+                    request_id=request['request_id'], 
+                    historical_requests=historical_requests,
+                    step='Creating new proposal',
+                )
+            
             parallel_proposal = load_proposal(
                 request['proposal_name'], llm, guide, request['proposal_args']
             )

@@ -229,7 +229,7 @@
         socket.on('status', (data) => {
             console.log('Received status update:', data);  // Log incoming status updates
             const requestElement = createOrUpdateRequestElement(data.request_id);
-            appendStatus(requestElement, `Step: ${data.step}`, data.duration);
+            appendStatus(requestElement, `${data.step}`, data.duration);
             updateRequestDetails(requestElement, data);
         });
 
@@ -238,7 +238,7 @@
             fetch('/history')
                 .then(response => response.json())
                 .then(data => {
-                    data.reverse().forEach(item => {
+                    data.forEach(item => {
                         const requestElement = createOrUpdateRequestElement(item.request_id);
                         updateRequestDetails(requestElement, item);
                         item.steps.forEach(step => {
