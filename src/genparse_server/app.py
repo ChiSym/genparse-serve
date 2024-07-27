@@ -12,8 +12,6 @@ import uuid
 from flask import Flask, request, jsonify, abort, send_from_directory
 from flask_socketio import SocketIO
 from collections import defaultdict
-import psutil
-import GPUtil
 
 from util import load_llm, post_process_posterior, emit_status_update
 from config import model_name, defaults, type_expectations, proposal_cache_size
@@ -147,6 +145,7 @@ def run_inference():
             request_id=request_id, 
             step=f'Request failed',
             historical_requests=historical_requests,
+            attributes=request_data,
             error=str(e)
         )
         abort(500, f'Server error: {e}')

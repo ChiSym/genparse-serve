@@ -1,10 +1,11 @@
-model_name = 'gpt2'
-#'meta-llama/Meta-Llama-3.1-8B'
+model_name = 'meta-llama/Meta-Llama-3.1-8B'
 #"hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4"
 
 n_processes = 8
 
 proposal_cache_size = 10
+
+guide_cache_path = 'guide_cache.pkl'
 
 type_expectations = {
     'prompt': str,
