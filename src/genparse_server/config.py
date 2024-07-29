@@ -5,6 +5,8 @@ n_processes = 8
 
 proposal_cache_size = 10
 
+guide_cache_path = 'guide_cache.pkl'
+
 type_expectations = {
     'prompt': str,
     'method': str,

@@ -1,6 +1,4 @@
 import re
-from functools import lru_cache
-from genparse.util import lark_guide
 from genparse import EOS
 
 from genparse.experimental.batch_inference import ParallelCharacterProposal, ParallelTokenProposal
@@ -18,14 +16,6 @@ def load_proposal(proposal_name, llm, guide, args):
         )
     else:
         raise ValueError(f'Invalid proposal name {proposal_name!r}')
-    
-@lru_cache(maxsize=10)
-def make_guide(grammar_string):
-    try:
-        guide = lark_guide(grammar_string)
-    except Exception as e:
-        raise ValueError(f"Guide initialization error : {e}")
-    return guide
     
 def post_process_posterior(posterior):
     return {re.sub('</s>', '', re.sub(EOS, '', x)) : p for x,p in posterior.items()}

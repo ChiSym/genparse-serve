@@ -11,15 +11,18 @@ This is a repository for a Flask application which serves GenParse requests from
     * Allow HTTP and HTTPS traffic.
     * Expose ports `8888` and `9999`. In `probcomp-caliban`, this can be done by adding the `caliban` and `expose-port-9999` network tags.
 * SSH into the GCP instance.
-* Setup `genparse` by running:
-	```bash
-	git clone git@github.com:probcomp/genparse.git
- 	cd genparse
- 	make env
-	```
- 	We recommend setting up a genparse in a conda environment with python 3.10.
-* Clone this repository.
-* Install flask and waitress with `pip install flask waitress`
+* Clone this repository
+* Setup `genparse` and download server dependencies. To do this, you can either
+	* run `./setup.sh`, which will create a conda environment with `genparse` and the repositories dependencies; or
+	* Setup `genparse` and this repository manually:
+		* Setup `genparse` by running:
+			```bash
+			git clone git@github.com:probcomp/genparse.git
+			cd genparse
+			make env
+			```
+			We recommend setting up a genparse in a conda environment with python 3.10.
+		* Install flask and waitress with `pip install flask waitress`
 * Create a service file and start the server with 
 	```bash
 	sh start.sh path-to-genparse-conda-env
@@ -30,6 +33,8 @@ This is a repository for a Flask application which serves GenParse requests from
 	```
 
 * Check the status of the server with `sudo systemctl status genparse-server-app.service`.
+	* Error and log files are written to `src/genparse_server/log`. Check these logs after initializing.
+	* Note: You may need to authenticate with huggingface. To do so, run `huggingface-cli login`.
 * You can restart the server with `sudo systemctl restart genparse-server-app.service`.
 
 This repository also contains a Flask application to remotely restart the GenParser server in case of failure. This application is located in `src/restart_service_app` and can be accessed at `<STATIC-IP>:9999/` in a browser. This app will be started when you run `start.sh`, and you can check its status with `sudo systemctl status restart-service-app.service`. 
