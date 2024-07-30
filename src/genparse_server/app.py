@@ -10,7 +10,7 @@ import argparse
 import threading
 from flask import Flask, request, jsonify, abort
 
-from util import load_llm, post_process_posterior
+from util import load_llm, post_process_posterior, post_process_parse
 from config import model_name, defaults, type_expectations, proposal_cache_size
 from cache import ProposalCache
 
@@ -76,7 +76,8 @@ def process_inference_task(request):
 
     return {
         'posterior' : post_process_posterior(results.posterior),
-        'log_ml_estimate' : results.log_ml
+        'log_ml_estimate' : results.log_ml,
+        'log_weights' : {post_process_parse(''.join(p.context)) : p.log_weight for p in results.particles}
     }
   
 

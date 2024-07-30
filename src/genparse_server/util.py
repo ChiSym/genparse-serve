@@ -17,8 +17,11 @@ def load_proposal(proposal_name, llm, guide, args):
     else:
         raise ValueError(f'Invalid proposal name {proposal_name!r}')
     
+def post_process_parse(parse):
+    return re.sub('</s>', '', re.sub(EOS, '', parse))
+    
 def post_process_posterior(posterior):
-    return {re.sub('</s>', '', re.sub(EOS, '', x)) : p for x,p in posterior.items()}
+    return {post_process_parse(x) : p for x, p in posterior.items()}
 
 def load_llm(model_name):
     from genparse.lm import VirtualTokenizedLLM
